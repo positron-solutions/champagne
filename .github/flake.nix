@@ -87,7 +87,7 @@
 
                   # Development dependencies
                   # epkgs.elpaPackages.relint
-                  # epkgs.melpaPackages.elisp-lint
+                  epkgs.melpaPackages.elisp-lint
                   # epkgs.melpaPackages.buttercup # XXX finish after #218 on buttercup
                   # epkgs.melpaPackages.elsa # XXX did not work out of the box
 
