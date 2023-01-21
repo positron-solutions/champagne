@@ -1,0 +1,72 @@
+#+TITLE: Champagne
+
+#+HTML: <!--a href="https://melpa.org/#/champagne"><img src="https://melpa.org/packages/champagne-badge.svg" alt="melpa package"></a> <a href="https://stable.melpa.org/#/champagne"><img src="https://stable.melpa.org/packages/champagne-badge.svg" alt="melpa stable package"></a-->
+#+HTML: <a href="https://github.com/positron-solutions/champagne/actions/?workflow=CI"><img src="https://github.com/positron-solutions/champagne/actions/workflows/ci.yml/badge.svg" alt="CI workflow status"></a>
+#+HTML: <a href="https://github.com/positron-solutions/champagne/actions/?workflow=Developer+Certificate+of+Origin"><img src="https://github.com/positron-solutions/champagne/actions/workflows/dco.yml/badge.svg" alt="DCO Check"></a>
+
+Animated countdown timer for welcoming all important life events.  Also see the
+=countdown= package on MELPA.
+
+It's a big number in a posframe.  The numbers shrink away as each second ticks
+by.
+
+It will call functions at the timer start and timer end, allowing you to
+integrate with other "games" such as snow.el.
+
+** Install Champagne
+
+  #+begin_src elisp :eval never
+
+    (use-package champagne) ; vanilla
+
+    ;; using elpaca
+    (elpaca-use-package
+     (champagne :host github
+          :repo "positron-solutions/champagne"))
+
+    ;; straight without `straight-use-package-by-default'
+    (straight-use-package '(champagne :type git :host github
+                                :repo "positron-solutions/champagne"))
+
+    ;; straight with `straight-use-package-by-default' t
+    (use-package champagne
+      :straight
+      (champagne :type git :host github :repo "positron-solutions/champagne"))
+
+    ;; or use melpa, manual load-path & require, you brave yak shaver
+
+  #+end_src
+
+** Use Champagne
+
+   #+begin_src elisp :eval never
+
+     ;; For a basic countdown, starting right now:
+     (champagne 5)
+     ;;
+     ;; Count down to some point in the future:
+     (champagne nil "Sun Jan 23 00:00:00 2023")
+     ;;
+     ;; Count down and call a function at the beginning of the countdown
+     (champagne nil nil #'parrot-start-animation)
+     ;;
+     ;; Count down and call a function at the end of the countdown
+     (champagne nil nil nil #'snow)
+     ;;
+     ;; Count down with all behaviors
+     (champagne 60 "Sun Jan 23 00:00:00 2023" #'parrot-start-animation #'snow)
+
+   #+end_src
+
+** Contributing
+
+   [[./CONTRIBUTING.org][CONTRIBUTING]] contains instructions on using this repository's functionality.
+   A DCO and GPL3 license are included with this project.
+
+   Do consider buying me a glass of champagne if you find this timer amusing.
+   Github Sponsors is configured.
+
+# Local Variables:
+# before-save-hook: (lambda () (when (require 'org-make-toc nil t) (org-make-toc)))
+# org-make-toc-link-type-fn: org-make-toc--link-entry-github
+# End:
