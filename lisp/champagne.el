@@ -135,7 +135,7 @@ display behavior consistent."
         ;; Make any leading spaces half width so that shorter numbers are
         ;; slightly shifted left.
         (let* ((padding (propertize (make-string (- digits digits-remaining) ?\40)
-                                   'display '(space-width 0.5))))
+                                    'display '(space-width 0.5))))
           (insert (format " %s%d" padding diff-seconds))))
 
       ;; Customize the color in animation if you want full party mode
@@ -161,20 +161,20 @@ display behavior consistent."
       ;; posframe show is run only after contents are available so that the
       ;; handler will do most of the work.
       (unless (posframe--find-existing-posframe buffer)
-      (posframe-show
-       buffer
-       ;; Border will use child-frame-border color by default
-       ;; :border-width 10
-       ;; :border-color (face-attribute 'internal-border :background)
+        (posframe-show
+         buffer
+         ;; Border will use child-frame-border color by default
+         ;; :border-width 10
+         ;; :border-color (face-attribute 'internal-border :background)
 
-       ;; Use of timeout or refresh calels leads to considerable slowness
-       ;; probably because it causes child frame resize.
+         ;; Use of timeout or refresh calels leads to considerable slowness
+         ;; probably because it causes child frame resize.
 
-       ;; Only supported on GTK?
-       ;; https://www.reddit.com/r/emacs/comments/v72tu6/new_emacs_frame_parameter_for_transparency/
-       ;; :override-parameters '((alpha-background 0.0))
+         ;; Only supported on GTK?
+         ;; https://www.reddit.com/r/emacs/comments/v72tu6/new_emacs_frame_parameter_for_transparency/
+         ;; :override-parameters '((alpha-background 0.0))
 
-       :poshandler 'posframe-poshandler-frame-center)))))
+         :poshandler 'posframe-poshandler-frame-center)))))
 
 ;;;###autoload
 (defun champagne (&optional duration goal-time start-fun end-fun)
