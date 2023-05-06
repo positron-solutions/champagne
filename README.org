@@ -19,19 +19,13 @@ integrate with other "games" such as snow.el.
 
     (use-package champagne) ; vanilla
 
-    ;; using elpaca
-    (elpaca-use-package
-     (champagne :host github
-          :repo "positron-solutions/champagne"))
-
-    ;; straight without `straight-use-package-by-default'
-    (straight-use-package '(champagne :type git :host github
-                                :repo "positron-solutions/champagne"))
-
-    ;; straight with `straight-use-package-by-default' t
+    ;; using elpaca's with explicit recipe
     (use-package champagne
-      :straight
-      (champagne :type git :host github :repo "positron-solutions/champagne"))
+      :elpaca (champagne :host github :repo "positron-solutions/champagne"))
+
+    ;; straight with explicit recipe
+    (use-package champagne
+      :straight (champagne :type git :host github :repo "positron-solutions/champagne"))
 
     ;; or use melpa, manual load-path & require, you brave yak shaver
 
