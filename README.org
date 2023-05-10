@@ -7,8 +7,7 @@
 Animated countdown timer for welcoming all important life events.  Also see the
 =countdown= package on MELPA.
 
-It's a big number in a posframe.  The numbers shrink away as each second ticks
-by.
+https://github.com/positron-solutions/champagne/assets/73710933/7ce7044d-68e2-4721-9b97-6dfa0d73adac
 
 It will call functions at the timer start and timer end, allowing you to
 integrate with other "games" such as snow.el.
