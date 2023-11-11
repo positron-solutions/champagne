@@ -72,6 +72,16 @@
   :group 'champagne
   :type 'string)
 
+(defcustom champagne-alpha 100
+  "Opacity of foreground and background from 0-100."
+  :group 'champagne
+  :type 'natnum)
+
+(defcustom champagne-alpha-background 0
+  "Opacity of just the background."
+  :group 'champagne
+  :type 'natnum)
+
 (defun champagne--read-N+ ()
   "Read a positive integer."
   (save-match-data
@@ -167,13 +177,17 @@ display behavior consistent."
          ;; :border-width 10
          ;; :border-color (face-attribute 'internal-border :background)
 
-         ;; Use of timeout or refresh calels leads to considerable slowness
+         ;; Use of timeout or refresh calls leads to considerable slowness
          ;; probably because it causes child frame resize.
 
-         ;; Only supported on GTK?
+         ;; alpha-background seems pgtk-exclusive
+         ;; alpha is inconsistent for different window managers (and Emacs versions (¬_¬))
          ;; https://www.reddit.com/r/emacs/comments/v72tu6/new_emacs_frame_parameter_for_transparency/
-         ;; :override-parameters '((alpha-background 0.0))
-
+         :override-parameters `((alpha . ,champagne-alpha)
+                               (alpha-background . ,champagne-alpha-background)
+                               (no-other-frame . t)
+                               (no-accept-focus . t)
+                               (no-other-frame . t))
          :poshandler 'posframe-poshandler-frame-center)))))
 
 ;;;###autoload
