@@ -118,6 +118,7 @@ display behavior consistent."
              (posframe-delete champagne-buffer-name)
              (when end-fun (funcall end-fun)))
     (let* ((diff (time-subtract goal-time (current-time)))
+           (landscape (> (frame-pixel-width) (frame-pixel-height)))
            (diff-seconds (+ 1(nth 1 diff)))
            (digits-remaining (length (number-to-string diff-seconds)))
            (diff-micros (nth 2 diff))
@@ -131,8 +132,10 @@ display behavior consistent."
            (height-cur-frac (+ (* eased-frac (- height-max-frac height-min-frac))
                                height-min-frac))
            (height-margin-frac (- height-max-frac height-cur-frac))
-           (font-scale  (* (float (frame-height)) height-cur-frac)))
-
+           ;; Note, fudge factor 0.6 is because letters are taller than they are wide.
+           ;; TODO enable clipping the lines to avoid reflow nonsense.
+           (font-scale  (* (float (if landscape (frame-height) (* 0.6 (frame-width))))
+                           height-cur-frac)))
       (set-buffer buffer)
       (face-remap-set-base 'default :height font-scale)
 
@@ -144,7 +147,7 @@ display behavior consistent."
         (erase-buffer)
         ;; Make any leading spaces half width so that shorter numbers are
         ;; slightly shifted left.
-        (let* ((padding (propertize (make-string (- digits digits-remaining) ?\40)
+        (let* ((padding (propertize (make-string (max 0 (- digits digits-remaining)) ?\40)
                                     'display '(space-width 0.5))))
           (insert (format " %s%d" padding diff-seconds))))
 
