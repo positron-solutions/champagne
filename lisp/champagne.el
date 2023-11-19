@@ -85,15 +85,12 @@
 (defun champagne--read-N+ ()
   "Read a positive integer."
   (save-match-data
-    (cl-block nil
-      (while t
-        (let ((str (read-from-minibuffer
-                    "Countdown duration (integer seconds): "
-                    (number-to-string champagne-default-seconds) nil nil nil)))
-          (when (string-match-p "\\`[1-9][0-9]*\\'" str)
-            (cl-return (string-to-number str))))
-        (message "Please enter a positive integer.")
-        (sit-for 1)))))
+    (let ((str (read-from-minibuffer
+                "Countdown duration (integer seconds): "
+                (number-to-string champagne-default-seconds) nil nil nil)))
+      (if (string-match-p "\\`[1-9][0-9]*\\'" str)
+          (string-to-number str)
+        (user-error "Please enter a positive integer")))))
 
 (defun champagne--start (goal-time start-fun end-fun digits)
   "Count down to GOAL-TIME.
