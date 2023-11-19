@@ -190,10 +190,10 @@ display behavior consistent."
          ;; alpha is inconsistent for different window managers (and Emacs versions (¬_¬))
          ;; https://www.reddit.com/r/emacs/comments/v72tu6/new_emacs_frame_parameter_for_transparency/
          :override-parameters `((alpha . ,champagne-alpha)
-                               (alpha-background . ,champagne-alpha-background)
-                               (no-other-frame . t)
-                               (no-accept-focus . t)
-                               (no-other-frame . t))
+                                (alpha-background . ,champagne-alpha-background)
+                                (no-other-frame . t)
+                                (no-accept-focus . t)
+                                (no-other-frame . t))
          :poshandler 'posframe-poshandler-frame-center)))))
 
 (defun champagne--future-diary-time (time-string)
