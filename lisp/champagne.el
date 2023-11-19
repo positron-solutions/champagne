@@ -282,6 +282,11 @@ be called with the countdown finishes."
                            (champagne--string-to-time goal-time))
                           ((listp goal-time) goal-time)
                           (t (time-add (current-time) `(0 ,duration 0 0)))))
+         (goal-time (if (time-less-p (time-subtract goal-time
+                                                    `(0 ,duration 0 0))
+                                     (current-time))
+                        (time-add (current-time) `(0 ,duration 0 0))
+                      goal-time))
          (start-time (time-subtract goal-time `(0 ,duration 0 0))))
     (run-at-time start-time nil #'champagne--start
                  goal-time start-fun end-fun digits)))
