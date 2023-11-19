@@ -51,6 +51,7 @@
 ;;; Code:
 
 (require 'posframe)
+(require 'timer)
 
 ;; macros only
 (eval-when-compile (require 'cl-lib))
@@ -189,6 +190,55 @@ display behavior consistent."
                                (no-accept-focus . t)
                                (no-other-frame . t))
          :poshandler 'posframe-poshandler-frame-center)))))
+
+(defun champagne--future-diary-time (time-string)
+  "Use `diary-time' to interpret TIME-STRING.
+Always return a future time because countdowns to the past are
+degenerate.  Returns nil if TIME-STRING is invalid according to
+`diary-entry-time', which understands `timer-duration-words'."
+  (when-let* ((now (decode-time))
+              (hhmm (diary-entry-time time-string))
+              (hhmm (unless (< hhmm 0) hhmm))
+              (time
+               (time-convert
+                (encode-time
+                 `(0
+                   ,(%  hhmm 100)
+                   ,(/ hhmm 100)
+                   ,(decoded-time-day now)
+                   ,(decoded-time-month now)
+                   ,(decoded-time-year now)))
+                'list)))
+    (if (time-less-p (current-time) time)
+        time
+      (time-add time (time-convert (days-to-time 1) 'list)))))
+
+(defun champagne--string-to-time (time)
+  "Make a best effort to convert TIME to something useful."
+  (cond ((string-empty-p time) (current-time))
+        ((timer-duration time) (time-add (current-time)
+                                         (seconds-to-time
+                                          (timer-duration time))))
+        ((and (require 'diary-lib nil t)
+              (> (diary-entry-time time) 0))
+         (champagne--future-diary-time time))
+        ((and (require 'parse-time nil t)
+              (car (parse-time-string time)))
+         (time-convert
+          (encode-time (parse-time-string time))
+          'list))))
+
+(defun champagne--read-time ()
+  "Read a TIME.
+Always returns an Emacs style time list, like `current-time'."
+  (let ((time (read-string "Goal time.  Enter a duration from now or future \
+time: ")))
+    (unless (string-empty-p time)
+      (if-let ((time (champagne--string-to-time time)))
+          time
+        (user-error "Durations such as \"2 hours 12 minutes\" and times such
+as \"12:34pm\" or military times such as \"23:14\" are supported.  Empty means \
+now")))))
 
 ;;;###autoload
 (defun champagne (&optional duration goal-time start-fun end-fun)

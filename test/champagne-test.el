@@ -33,8 +33,38 @@
 (require 'ert)
 (require 'champagne)
 
-;; No unit-testable pieces were developed so far.  The byte compile is catching
-;; most issues on its own.
+(ert-deftest champagne--future-diary-time-test ()
+  (should (>  (float-time
+               (time-subtract
+                (champagne--future-diary-time
+                 "12:00am")
+                (current-time)))
+              0.0))
+  (should (> (float-time
+              (time-subtract
+               (champagne--future-diary-time
+                "12:00pm")
+               (current-time)))
+             0.0))
+  (should (> (float-time
+              (time-subtract
+               (champagne--future-diary-time
+                "24:00")
+               (current-time)))
+             0.0))
+  (should (> (float-time
+              (time-subtract
+               (champagne--future-diary-time
+                "00:00")
+               (current-time)))
+             0.0)))
+
+(ert-deftest champagne--string-to-time-test ()
+  (should (champagne--string-to-time "11:23pm"))
+  (should (champagne--string-to-time "17:00"))
+  (should (champagne--string-to-time "4 hours 3 seconds"))
+  (should (champagne--string-to-time "12"))
+  (should (champagne--string-to-time "Sun Jan 23 00:00:00 2023")))
 
 (provide 'champagne-test)
 ;;; champagne-test.el ends here.
