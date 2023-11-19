@@ -38,6 +38,11 @@
 ;;
 ;; Count down to some point in the future:
 ;; (champagne nil "Sun Jan 23 00:00:00 2023")
+;; (champagne nil "12:00am") ; will use tomorrow if necessary
+;; (champagne nil "12:00") ; ⚠️ read as military time, tomorrow if necessary
+;; (champagne nil 60) ; one minute from now
+;; (champagne nil "2 hours 10 minutes") ; two hours and 10 minutes from now
+;; (champagne nil (25945 48350 688785 440000)) ; you like Emacs time lists
 ;;
 ;; Count down and call a function at the beginning of the countdown
 ;; (champagne nil nil #'parrot-start-animation)
@@ -244,16 +249,38 @@ now")))))
 (defun champagne (&optional duration goal-time start-fun end-fun)
   "Count down.
 DURATION is the number of seconds that will be counted down,
-reaching GOAL-TIME.  If GOAL-TIME is nil, the countdown will
-start immediately.  START-FUN will be called when the countdown
-begins.  END-FUN will be called with the countdown finishes."
-  (interactive (list (champagne--read-N+)))
+reaching GOAL-TIME.  If GOAL-TIME is not in the future far enough to allow the
+entire countdown to finish, it is considered degenerate and the current time -
+DURATION is used instead.
+
+GOAL-TIME supports a number of formats:
+
+- nil: start immediately
+- number: seconds from now
+- string: valid arguments to `timer-duration' or `timer-relative-time' or as a
+  fallback, `parse-time-string'.  Examples of valid values:
+  mm:ss
+  hh:mm:ss
+  2 hours 35 minutes
+  2 hour 35 min
+  11:23pm
+  Sun Jan 23 00:00:00 2023
+See `timer-duration-words' for details of using `timer-duration' style.  See
+`diary-entry-time' for more valid 11:23PM style times.
+
+- cons: used as a raw value like calling `current-time'
+
+START-FUN will be called when the countdown begins.  END-FUN will
+be called with the countdown finishes."
+  (interactive (list (champagne--read-N+)
+                     (champagne--read-time)))
   (let* ((duration (or duration champagne-default-seconds))
          (digits (length (number-to-string duration)))
-         (goal-time (cond ((stringp goal-time)
-                           (append (encode-time (parse-time-string goal-time)
-                                                '(0 0))))
-                          ((consp goal-time) goal-time)
+         (goal-time (cond ((numberp goal-time)
+                           (timer-relative-time (current-time) goal-time))
+                          ((stringp goal-time)
+                           (champagne--string-to-time goal-time))
+                          ((listp goal-time) goal-time)
                           (t (time-add (current-time) `(0 ,duration 0 0)))))
          (start-time (time-subtract goal-time `(0 ,duration 0 0))))
     (run-at-time start-time nil #'champagne--start

@@ -15,7 +15,6 @@ integrate with other "games" such as snow.el.
 ** Install Champagne
 
   #+begin_src elisp :eval never
-
     (use-package champagne) ; vanilla
 
     ;; using elpaca's with explicit recipe
@@ -27,10 +26,23 @@ integrate with other "games" such as snow.el.
       :straight (champagne :type git :host github :repo "positron-solutions/champagne"))
 
     ;; or use melpa, manual load-path & require, you brave yak shaver
-
   #+end_src
 
 ** Use Champagne
+=M-x= ~champagne~ will ask for a =duration= and =goal-time=.  Goal time should be far
+enough in the future for the duration to run or else it will start immediately
+instead.  Empty goal time will also start immediately.  Some acceptable values
+for goal time:
+
+- =5:05=
+- =17:12=
+- =2 hours 10 minutes=
+- =5:00pm=
+- =Sun Jan 23 00:00:00 2023=
+
+*** From Elisp
+Calling ~champagne~ from Elisp is mostly the same.  Emacs list style times
+returned from ~current-time~ etc are acceptable.
 
    #+begin_src elisp :eval never
 
@@ -38,7 +50,7 @@ integrate with other "games" such as snow.el.
      (champagne 5)
      ;;
      ;; Count down to some point in the future:
-     (champagne nil "Sun Jan 23 00:00:00 2023")
+     (champagne nil "10:00pm")
      ;;
      ;; Count down and call a function at the beginning of the countdown
      (champagne nil nil #'parrot-start-animation)
@@ -50,7 +62,16 @@ integrate with other "games" such as snow.el.
      (champagne 60 "Sun Jan 23 00:00:00 2023" #'parrot-start-animation #'snow)
 
    #+end_src
+*** Limitations
+Depending on your window manager, you may observe that ~alpha~ and
+~alpha-background~ do not work or leave graphical artifacts until the child frame
+is cleaned up after the countdown.  Set these to 100 via customize if you have
+an issue.
 
+The child frame used by posframe could be replaced if anyone is interested in
+some easy code to fix up, but even non-child frames and those using
+~override-redirect~ will have varying transparency support depending on the window
+manager.
 ** Contributing
 
    [[./CONTRIBUTING.org][CONTRIBUTING]] contains instructions on using this repository's functionality.
