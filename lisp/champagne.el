@@ -120,7 +120,7 @@ display behavior consistent."
       (progn (cancel-timer animation-timer)
              (posframe-delete champagne-buffer-name)
              (when end-fun (funcall end-fun)))
-    (let* ((diff (time-subtract goal-time (current-time)))
+    (let* ((diff (time-convert (time-subtract goal-time (current-time)) 'list))
            (landscape (> (frame-pixel-width) (frame-pixel-height)))
            (diff-seconds (+ 1(nth 1 diff)))
            (digits-remaining (length (number-to-string diff-seconds)))
