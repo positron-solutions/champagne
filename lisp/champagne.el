@@ -83,7 +83,7 @@
   :group 'champagne
   :type 'natnum)
 
-(defcustom champagne-alpha-background 0
+(defcustom champagne-alpha-background 100
   "Opacity of just the background."
   :group 'champagne
   :type 'natnum)
