@@ -2,11 +2,13 @@
 
 ;; Copyright (C) 2022 Positron Solutions
 
-;; Author:  Psionik K <73710933+psionic-k@users.noreply.github.com>
+;; Author:  Psionic K <73710933+psionic-k@users.noreply.github.com>
 ;; Keywords: games
 ;; Version: 0.3.0
 ;; Package-Requires: ((emacs "28.1") (posframe "1.4.2"))
 ;; Homepage: http://github.com/positron-solutions/champagne
+
+;;; License:
 
 ;; This program is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
@@ -196,16 +198,19 @@ display behavior consistent."
                                 (no-other-frame . t))
          :poshandler 'posframe-poshandler-frame-center)))))
 
+(declare-function diary-entry-time "diary-lib")
 (defun champagne--future-diary-time (time-string)
   "Use `diary-time' to interpret TIME-STRING.
 Always return a future time because countdowns to the past are
 degenerate.  Returns nil if TIME-STRING is invalid according to
 `diary-entry-time', which understands `timer-duration-words'."
   (when-let* ((now (decode-time))
-              (hhmm (diary-entry-time time-string))
+              (hhmm (and (require 'diary-lib nil t)
+                         (diary-entry-time time-string)))
               (hhmm (unless (< hhmm 0) hhmm))
               (time
                (time-convert
+                ;; For future readers, you can use `setf' if you prefer.
                 (encode-time
                  `(0
                    ,(%  hhmm 100)
@@ -228,6 +233,7 @@ degenerate.  Returns nil if TIME-STRING is invalid according to
               (> (diary-entry-time time) 0))
          (champagne--future-diary-time time))
         ((and (require 'parse-time nil t)
+              ;; first value is nil in a lot of degenerate cases
               (car (parse-time-string time)))
          (time-convert
           (encode-time (parse-time-string time))
@@ -274,20 +280,20 @@ START-FUN will be called when the countdown begins.  END-FUN will
 be called with the countdown finishes."
   (interactive (list (champagne--read-N+)
                      (champagne--read-time)))
-  (let* ((duration (or duration champagne-default-seconds))
-         (digits (length (number-to-string duration)))
+  (let* ((digits (length (number-to-string duration)))
+         (duration (time-convert (or duration champagne-default-seconds) nil))
          (goal-time (cond ((numberp goal-time)
                            (timer-relative-time (current-time) goal-time))
                           ((stringp goal-time)
                            (champagne--string-to-time goal-time))
                           ((listp goal-time) goal-time)
-                          (t (time-add (current-time) `(0 ,duration 0 0)))))
+                          (t (time-add (current-time) duration))))
          (goal-time (if (time-less-p (time-subtract goal-time
-                                                    `(0 ,duration 0 0))
+                                                    duration)
                                      (current-time))
-                        (time-add (current-time) `(0 ,duration 0 0))
+                        (time-add (current-time) duration)
                       goal-time))
-         (start-time (time-subtract goal-time `(0 ,duration 0 0))))
+         (start-time (time-subtract goal-time duration)))
     (run-at-time start-time nil #'champagne--start
                  goal-time start-fun end-fun digits)))
 
