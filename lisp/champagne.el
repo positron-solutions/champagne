@@ -207,21 +207,13 @@ degenerate.  Returns nil if TIME-STRING is invalid according to
   (when-let* ((now (decode-time))
               (hhmm (and (require 'diary-lib nil t)
                          (diary-entry-time time-string)))
-              (hhmm (unless (< hhmm 0) hhmm))
-              (time
-               (time-convert
-                ;; For future readers, you can use `setf' if you prefer.
-                (encode-time
-                 `(0
-                   ,(%  hhmm 100)
-                   ,(/ hhmm 100)
-                   ,(decoded-time-day now)
-                   ,(decoded-time-month now)
-                   ,(decoded-time-year now)))
-                'list)))
-    (if (time-less-p (current-time) time)
-        time
-      (time-add time (time-convert (days-to-time 1) 'list)))))
+              (hhmm (unless (< hhmm 0) hhmm)))
+    (setf (decoded-time-minute now) (% hhmm 100))
+    (setf (decoded-time-hour now) (/ hhmm 100))
+    (let ((time (time-convert (encode-time now) 'list)))
+      (if (time-less-p (current-time) time)
+          time
+        (time-add time (time-convert (days-to-time 1) 'list))))))
 
 (defun champagne--string-to-time (time)
   "Make a best effort to convert TIME to something useful."
