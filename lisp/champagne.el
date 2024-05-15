@@ -1,10 +1,10 @@
 ;;; champagne.el --- Graphical countdowns  -*- lexical-binding: t; -*-
 
-;; Copyright (C) 2022 Positron Solutions
+;; Copyright (C) 2022-2024 Positron
 
-;; Author:  Psionic K <73710933+psionic-k@users.noreply.github.com>
+;; Author:  Psionic K <contact@positron.solutions>
 ;; Keywords: games
-;; Version: 0.3.0
+;; Version: 0.3.2
 ;; Package-Requires: ((emacs "28.1") (posframe "1.4.2"))
 ;; Homepage: http://github.com/positron-solutions/champagne
 
