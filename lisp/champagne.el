@@ -210,6 +210,7 @@ degenerate.  Returns nil if TIME-STRING is invalid according to
               (hhmm (unless (< hhmm 0) hhmm)))
     (setf (decoded-time-minute now) (% hhmm 100))
     (setf (decoded-time-hour now) (/ hhmm 100))
+    (setf (decoded-time-second now) 0)
     (let ((time (time-convert (encode-time now) 'list)))
       (if (time-less-p (current-time) time)
           time
