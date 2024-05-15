@@ -98,7 +98,7 @@
                 (number-to-string champagne-default-seconds) nil nil nil)))
       (if (string-match-p "\\`[1-9][0-9]*\\'" str)
           (string-to-number str)
-        (user-error "Please enter a positive integer")))))
+        (user-error "%s not a positive integer" str)))))
 
 (defun champagne--start (goal-time start-fun end-fun digits)
   "Count down to GOAL-TIME.
@@ -292,6 +292,9 @@ be called with the countdown finishes."
                         (time-add (current-time) duration)
                       goal-time))
          (start-time (time-subtract goal-time duration)))
+    (message "%s second countdown scheduled to end at %s"
+             (floor (float-time duration))
+             (format-time-string "%l:%M:%S %p %d %B %Y" goal-time))
     (run-at-time start-time nil #'champagne--start
                  goal-time start-fun end-fun digits)))
 
