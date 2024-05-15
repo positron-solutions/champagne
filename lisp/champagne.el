@@ -39,7 +39,7 @@
 ;; (champagne 5)
 ;;
 ;; Count down to some point in the future:
-;; (champagne nil "Sun Jan 23 00:00:00 2023")
+;; (champagne nil "Wed Jan 23 00:00:00 2025")
 ;; (champagne nil "12:00am") ; will use tomorrow if necessary
 ;; (champagne nil "12:00") ; ⚠️ read as military time, tomorrow if necessary
 ;; (champagne nil 60) ; one minute from now
@@ -53,7 +53,7 @@
 ;; (champagne nil nil nil #'snow)
 ;;
 ;; Count down with all behaviors
-;; (champagne 60 "Sun Jan 23 00:00:00 2023" #'parrot-start-animation #'snow)
+;; (champagne 60 "Wed Jan 23 00:00:00 2025" #'parrot-start-animation #'snow)
 
 ;;; Code:
 
@@ -268,7 +268,7 @@ GOAL-TIME supports a number of formats:
   2 hours 35 minutes
   2 hour 35 min
   11:23pm
-  Sun Jan 23 00:00:00 2023
+  Wed Jan 1 00:00:00 2025
 See `timer-duration-words' for details of using `timer-duration' style.  See
 `diary-entry-time' for more valid 11:23PM style times.
 
