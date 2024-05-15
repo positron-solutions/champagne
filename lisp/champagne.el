@@ -239,10 +239,14 @@ time: ")))
     (unless (string-empty-p time)
       (if-let ((time (champagne--string-to-time time)))
           time
-        (user-error "Durations such as \"2 hours 12 minutes\" and times such
-as \"12:34pm\" or military times such as \"23:14\" are supported.  Empty means \
-now")))))
-
+        ;; TODO could have sworn one of the options will format mm:ss to a time
+        ;; today.
+        (user-error "Goal time couldn't be decided
+Valid formats - hh:mm
+              - hh:mm:ss
+              - 2 hours 35 min
+              - 11:23pm
+              - Wed Jan 1 00:00:00 2025")))))
 
 ;; TODO provide a transient interface
 ;;;###autoload
@@ -259,7 +263,7 @@ GOAL-TIME supports a number of formats:
 - number: seconds from now
 - string: valid arguments to `timer-duration' or `timer-relative-time' or as a
   fallback, `parse-time-string'.  Examples of valid values:
-  mm:ss
+  hh:mm
   hh:mm:ss
   2 hours 35 minutes
   2 hour 35 min
