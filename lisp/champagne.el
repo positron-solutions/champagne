@@ -32,7 +32,7 @@
 
 ;;; Usage:
 
-;; For a quick manual coundown, M-x champagne will just ask you for a number of
+;; For a quick manual countdown, M-x champagne will just ask you for a number of
 ;; seconds.
 
 ;; For a basic countdown, starting right now:
@@ -116,7 +116,7 @@ calling `champagne'."
 (defun champagne--animate (goal-time end-fun animation-timer digits)
   "Animate a countdown until GOAL-TIME.
 Call END-FUN when countdown finishes.  ANIMATION-TIMER is
-cancelled when GOAL-TIME is reached.  DIGITS is used to make
+canceled when GOAL-TIME is reached.  DIGITS is used to make
 display behavior consistent."
   (if (time-less-p goal-time (current-time))
       (progn (cancel-timer animation-timer)
@@ -243,6 +243,8 @@ time: ")))
 as \"12:34pm\" or military times such as \"23:14\" are supported.  Empty means \
 now")))))
 
+
+;; TODO provide a transient interface
 ;;;###autoload
 (defun champagne (&optional duration goal-time start-fun end-fun)
   "Count down.
